@@ -6,7 +6,8 @@ ENV NGINX_VERSION 1.13.5-1~stretch
 ENV NJS_VERSION   1.13.5.0.1.13-1~stretch
 
 RUN set -x \
-	&& install_packages gnupg1 \
+	&& apt-get update \
+	&& apt-get install --no-install-recommends --no-install-suggests -y gnupg1 \
 	&& \
 	NGINX_GPGKEY=573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62; \
 	found=''; \
@@ -76,9 +77,10 @@ RUN set -x \
 			;; \
 	esac \
 	\
-	&& install_packages \
+	&& apt-get install --no-install-recommends --no-install-suggests -y \
 						$nginxPackages \
 						gettext-base \
+	&& rm -rf /var/lib/apt/lists/* \
 	\
 # if we have leftovers from building, let's purge them (including extra, unnecessary build deps)
 	&& if [ -n "$tempDir" ]; then \
